@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from .. import schemas, crud, auth, database, models
+import schemas, crud, auth, database, models
 
 router = APIRouter(
     prefix="/workouts",
