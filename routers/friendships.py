@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..database import get_db
-from .. import models, schemas, auth
+from database import get_db
+from import models, schemas, auth
 
 router = APIRouter(
     prefix="/friends",
@@ -168,4 +168,5 @@ def compare_with_friend(
             "i_am_stronger": my_max > friend_max
         })
     
+
     return comparison
