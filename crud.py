@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
-from .auth import hash_password
+import models, schemas
+from auth import hash_password
 
 
 # ----------------------
@@ -86,3 +86,4 @@ def get_top3(db: Session, exercise: str):
     ).filter(models.ProgressMetric.exercise == exercise).order_by(
         models.ProgressMetric.max_weight.desc()
     ).limit(3).all()
+
