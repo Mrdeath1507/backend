@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from .database import Base
+from database import Base
 
 
 class User(Base):
@@ -58,3 +58,4 @@ class Friendship(Base):
     # Relaciones
     user = relationship("User", foreign_keys=[user_id], backref="friendships_initiated")
     friend = relationship("User", foreign_keys=[friend_id], backref="friendships_received")
+
