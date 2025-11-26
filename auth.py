@@ -5,7 +5,7 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from . import models, database, schemas
+import models, database, schemas
 
 SECRET_KEY = "SUPER_SECRET_KEY_CAMBIAR_ESTA_CLAVE"
 ALGORITHM = "HS256"
@@ -79,3 +79,4 @@ def get_current_user(token: str = Depends(oauth2_scheme),
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido o expirado")
+
