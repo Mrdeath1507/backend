@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import Base, engine
-from .routers import users, workouts, progress, friendships
+from database import Base, engine
+from routers import users, workouts, progress, friendships
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,3 +28,4 @@ app.include_router(friendships.router)
 @app.get("/")
 def root():
     return {"status": "API Online", "message": "Gym Progress API funcionando en producción 🚀"}
+
