@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 import models, database, schemas
 
-SECRET_KEY = "SUPER_SECRET_KEY_CAMBIAR_ESTA_CLAVE"
+SECRET_KEY = database-secret-key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 días
 
@@ -79,4 +79,5 @@ def get_current_user(token: str = Depends(oauth2_scheme),
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido o expirado")
+
 
