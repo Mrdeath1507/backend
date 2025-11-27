@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL") + "?sslmode=require"
 
 engine = create_engine(DATABASE_URL)
 
@@ -20,3 +20,4 @@ def get_db():
         yield db
     finally:
         db.close()
+
