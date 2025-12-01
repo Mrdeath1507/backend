@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 fastapi
 uvicorn
 sqlalchemy
 python-dotenv
 psycopg2-binary
 python-jose
+=======
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+psycopg2-binary
+python-jose
+>>>>>>> 706d10440f265cf7ae62f1ffaba147ebb1bd4b16
 passlib[bcrypt]
