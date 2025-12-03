@@ -17,7 +17,9 @@ def add_workout(workout: schemas.WorkoutCreate,
                 user=Depends(auth.get_current_user)):
     try:
         # Logging para debug
-        print(f"[workouts.add_workout] user_id={getattr(user, 'id', None)} workout={workout}")
+        print(f"[workouts.add_workout] user_id={getattr(user, 'id', None)}")
+        print(f"[workouts.add_workout] workout object: {workout}")
+        print(f"[workouts.add_workout] workout.exercise={workout.exercise}, workout.date={workout.date}, type(workout.date)={type(workout.date)}")
 
         # Guardar el entrenamiento
         workout_db = crud.create_workout(db, workout, user_id=user.id)

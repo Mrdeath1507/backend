@@ -42,13 +42,18 @@ class WorkoutCreate(WorkoutBase):
     @field_validator('date', mode='before')
     @classmethod
     def parse_date(cls, v):
+        print(f"[schemas.WorkoutCreate.parse_date] Input value: {v}, type: {type(v)}")
         if isinstance(v, str):
             # Si es solo una fecha (YYYY-MM-DD), convertir a datetime con hora 00:00:00
             try:
                 from datetime import datetime as dt
-                return dt.fromisoformat(v + 'T00:00:00')
-            except:
+                result = dt.fromisoformat(v + 'T00:00:00')
+                print(f"[schemas.WorkoutCreate.parse_date] Parsed successfully: {result}")
+                return result
+            except Exception as e:
+                print(f"[schemas.WorkoutCreate.parse_date] Error parsing: {e}")
                 return datetime.fromisoformat(v) if 'T' in v else dt.fromisoformat(v + 'T00:00:00')
+        print(f"[schemas.WorkoutCreate.parse_date] Not a string, returning as is: {v}")
         return v
 
 class WorkoutResponse(WorkoutBase):
