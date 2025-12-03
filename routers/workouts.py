@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+import traceback
 
 import schemas, crud, auth, database, models
 
@@ -14,14 +15,23 @@ router = APIRouter(
 def add_workout(workout: schemas.WorkoutCreate,
                 db: Session = Depends(database.get_db),
                 user=Depends(auth.get_current_user)):
+    try:
+        # Logging para debug
+        print(f"[workouts.add_workout] user_id={getattr(user, 'id', None)} workout={workout}")
 
-    # Guardar el entrenamiento
-    workout_db = crud.create_workout(db, workout, user_id=user.id)
+        # Guardar el entrenamiento
+        workout_db = crud.create_workout(db, workout, user_id=user.id)
 
-    # Actualizar el PR del ejercicio
-    crud.update_progress_metric(db, user.id, workout.exercise, workout.weight)
+        # Actualizar el PR del ejercicio
+        crud.update_progress_metric(db, user.id, workout.exercise, workout.weight)
 
-    return workout_db
+        print(f"[workouts.add_workout] Saved workout id={workout_db.id}")
+        return workout_db
+    except Exception as e:
+        # Imprimir stacktrace en logs para identificar el problema
+        print("[workouts.add_workout] Exception:")
+        traceback.print_exc()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.get("/mine", response_model=list[schemas.WorkoutResponse])
