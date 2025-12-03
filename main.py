@@ -39,7 +39,7 @@ def root():
 # ==================== SISTEMA DE ACTUALIZACIONES ====================
 
 # Versión actual de la app
-CURRENT_APP_VERSION = "1.0.1"
+CURRENT_APP_VERSION = "1.0.2"
 LAST_UPDATE_DATE = "2025-12-03"
 
 @app.get("/api/version")
@@ -71,23 +71,53 @@ def get_version():
 async def check_update(data: dict):
     """
     Verificar si hay actualización disponible
-    Recibe: {"current_version": "1.0.0"}
+    Recibe: {"current_version": "1.0.0", "platform": "android", "app_id": "..."}
     """
     try:
         current_version = data.get("current_version", "0.0.0")
+        platform = data.get("platform", "web")
         
         # Comparar versiones
         is_update_available = compare_versions(CURRENT_APP_VERSION, current_version) > 0
         
-        return {
+        response = {
             "update_available": is_update_available,
             "latest_version": CURRENT_APP_VERSION,
             "current_version": current_version,
-            "message": "Nueva versión disponible" if is_update_available else "Ya tienes la última versión",
-            "changelog": "✅ Entrenamientos se guardan correctamente\n✅ Corrección del manifest.json\n✅ Sistema de actualizaciones automáticas"
+            "changelog": "✅ Entrenamientos se guardan correctamente\n✅ Corrección del manifest.json\n✅ Sistema de actualizaciones automáticas",
+            "release_date": LAST_UPDATE_DATE
         }
+        
+        # Si es Android, agregar URL de descarga
+        if platform == "android" and is_update_available:
+            response["download_url"] = f"https://web-production-2f216.up.railway.app/api/download-update/{CURRENT_APP_VERSION}"
+        
+        return response
+        
     except Exception as e:
         return {"error": str(e), "update_available": False}
+
+@app.get("/api/download-update/{version}")
+async def download_update(version: str):
+    """
+    Endpoint para descargar actualización (archivo ZIP)
+    En producción, esto serviría un archivo ZIP con los cambios
+    Por ahora, retorna un JSON indicando que la actualización está lista
+    """
+    try:
+        # Verificar que la versión es válida
+        if not is_valid_version(version):
+            return {"error": "Versión inválida"}
+        
+        return {
+            "status": "ok",
+            "version": version,
+            "message": "Actualización disponible para descargar",
+            "size_mb": 0.5,  # Tamaño estimado de cambios
+            "checksum": "abc123def456"  # Para verificar integridad
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 def compare_versions(v1, v2):
     """Compara dos versiones semánticas. Retorna 1 si v1>v2, -1 si v1<v2, 0 si son iguales"""
@@ -106,3 +136,11 @@ def compare_versions(v1, v2):
         return 0
     except:
         return 0
+
+def is_valid_version(version: str) -> bool:
+    """Verifica que la versión tenga formato válido (X.Y.Z)"""
+    try:
+        parts = version.split('.')
+        return len(parts) == 3 and all(p.isdigit() for p in parts)
+    except:
+        return False
