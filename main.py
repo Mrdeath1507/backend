@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sys
+import os
+
+print(f"[main.py] Current working directory: {os.getcwd()}")
+print(f"[main.py] sys.path: {sys.path}")
 
 from database import Base, engine
 from routers import users, workouts, progress, friendships
