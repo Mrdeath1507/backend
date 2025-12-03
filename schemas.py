@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from datetime import datetime
+from pydantic import BaseModel, field_validator
+from datetime import datetime, date
 from typing import Optional, List
 
 # ------------------------------
@@ -37,7 +37,19 @@ class WorkoutBase(BaseModel):
     muscle_group: str
 
 class WorkoutCreate(WorkoutBase):
-    pass
+    date: Optional[str] = None  # Aceptar como string (YYYY-MM-DD)
+    
+    @field_validator('date', mode='before')
+    @classmethod
+    def parse_date(cls, v):
+        if isinstance(v, str):
+            # Si es solo una fecha (YYYY-MM-DD), convertir a datetime con hora 00:00:00
+            try:
+                from datetime import datetime as dt
+                return dt.fromisoformat(v + 'T00:00:00')
+            except:
+                return datetime.fromisoformat(v) if 'T' in v else dt.fromisoformat(v + 'T00:00:00')
+        return v
 
 class WorkoutResponse(WorkoutBase):
     id: int
