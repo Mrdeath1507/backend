@@ -37,24 +37,35 @@ class WorkoutBase(BaseModel):
     muscle_group: str
 
 class WorkoutCreate(WorkoutBase):
-    date: Optional[str] = None  # Aceptar como string (YYYY-MM-DD)
+    date: Optional[datetime] = None  # Aceptar como datetime o string
     
     @field_validator('date', mode='before')
     @classmethod
     def parse_date(cls, v):
-        print(f"[schemas.WorkoutCreate.parse_date] Input value: {v}, type: {type(v)}")
+        """Convertir date a datetime si es necesario"""
+        from datetime import datetime as dt
+        
+        # Si es None o está vacío, usar la fecha actual
+        if v is None or (isinstance(v, str) and v.strip() == ''):
+            return dt.utcnow()
+        
+        # Si ya es datetime, retornar
+        if isinstance(v, datetime):
+            return v
+        
+        # Si es string, parsear
         if isinstance(v, str):
-            # Si es solo una fecha (YYYY-MM-DD), convertir a datetime con hora 00:00:00
             try:
-                from datetime import datetime as dt
-                result = dt.fromisoformat(v + 'T00:00:00')
-                print(f"[schemas.WorkoutCreate.parse_date] Parsed successfully: {result}")
-                return result
+                v = v.strip()
+                # Si es formato YYYY-MM-DD, agregar hora
+                if len(v) == 10 and v.count('-') == 2:
+                    v = v + 'T00:00:00'
+                return dt.fromisoformat(v)
             except Exception as e:
-                print(f"[schemas.WorkoutCreate.parse_date] Error parsing: {e}")
-                return datetime.fromisoformat(v) if 'T' in v else dt.fromisoformat(v + 'T00:00:00')
-        print(f"[schemas.WorkoutCreate.parse_date] Not a string, returning as is: {v}")
-        return v
+                print(f"[schemas] Error parsing date '{v}': {e}")
+                return dt.utcnow()
+        
+        return dt.utcnow()
 
 class WorkoutResponse(WorkoutBase):
     id: int

@@ -39,7 +39,8 @@ def create_workout(db: Session, workout: schemas.WorkoutCreate, user_id: int):
         weight=workout.weight,
         reps=workout.reps,
         sets=workout.sets,
-        muscle_group=workout.muscle_group
+        muscle_group=workout.muscle_group,
+        date=workout.date  # Guardar la fecha
     )
 
     db.add(workout_db)
