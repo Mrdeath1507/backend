@@ -13,7 +13,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Gym Progress API",
-    version="1.0.0"
+    version="1.0.2"
 )
 
 # CORS PARA APP WEB + ANDROID
