@@ -28,7 +28,7 @@ class Workout(Base):
     reps = Column(Integer)                    # Repeticiones
     sets = Column(Integer)                    # Series
     muscle_group = Column(String)             # Pecho, espalda, etc.
-    date = Column(DateTime, default=datetime.now)
+    date = Column(DateTime, default=datetime.utcnow)
 
     # Relación inversa
     user = relationship("User", back_populates="workouts")
@@ -42,7 +42,7 @@ class ProgressMetric(Base):
 
     exercise = Column(String, index=True)     # Ejercicio específico
     max_weight = Column(Float)                # Peso máximo registrado
-    updated_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="metrics")
 
@@ -54,7 +54,7 @@ class Friendship(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     friend_id = Column(Integer, ForeignKey("users.id"))
     status = Column(String, default="pending")  # pending, accepted, rejected
-    created_at = Column(DateTime, default=datetime.now)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relaciones
     user = relationship("User", foreign_keys=[user_id], backref="friendships_initiated")
