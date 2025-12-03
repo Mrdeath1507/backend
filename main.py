@@ -33,3 +33,13 @@ app.include_router(friendships.router)
 @app.get("/")
 def root():
     return {"status": "API Online", "message": "Gym Progress API funcionando en producción 🚀"}
+
+@app.get("/api/version")
+def get_version():
+    """Endpoint para verificar versión disponible de la app"""
+    # La versión puede ser actualizada aquí o desde una variable de entorno
+    return {
+        "version": "1.0.1",  # Cambiar esto cuando haya una nueva versión
+        "changelog": "- Ahorro de entrenamientos corregido\n- Mejoras de rendimiento",
+        "required": False  # Si es True, fuerza actualización
+    }
