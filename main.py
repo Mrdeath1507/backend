@@ -36,6 +36,25 @@ app.include_router(friendships.router)
 def root():
     return {"status": "API Online", "message": "Gym Progress API funcionando en producción 🚀"}
 
+
+@app.get("/mgp/version.json")
+async def mgp_version():
+    """
+    Endpoint simple que retorna el JSON de versión para OTA externo.
+    Ejemplo disponible en: https://<tu-dominio>/mgp/version.json
+    """
+    try:
+        # Datos de ejemplo; actualiza aquí cuando publiques un APK nuevo
+        data = {
+            "latestVersionName": "1.1.0",
+            "latestVersionCode": 2,
+            "apkUrl": "https://web-production-2f216.up.railway.app/mgp/MyGymProgress-1.1.0.apk",
+            "changelog": "• Nuevo sistema de progreso.\n• Corrección de errores.\n• Mejoras de rendimiento."
+        }
+        return data
+    except Exception as e:
+        return {"error": str(e)}
+
 # ==================== SISTEMA DE ACTUALIZACIONES ====================
 
 # Versión actual de la app
