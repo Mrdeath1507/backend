@@ -40,11 +40,17 @@ def root():
 @app.get("/mgp/version.json")
 async def mgp_version():
     """
-    Endpoint simple que retorna el JSON de versión para OTA externo.
-    Ejemplo disponible en: https://<tu-dominio>/mgp/version.json
+    Endpoint que devuelve el archivo version.json si existe en el servidor.
+    Si no existe, devuelve un JSON por defecto (ejemplo).
     """
     try:
-        # Datos de ejemplo; actualiza aquí cuando publiques un APK nuevo
+        # Intentar servir un archivo estático en backend/static/mgp/version.json
+        base_dir = os.path.dirname(__file__)
+        static_path = os.path.abspath(os.path.join(base_dir, 'static', 'mgp', 'version.json'))
+        if os.path.isfile(static_path):
+            return FileResponse(static_path, media_type="application/json")
+
+        # Fallback a JSON ejemplo
         data = {
             "latestVersionName": "1.1.0",
             "latestVersionCode": 2,
