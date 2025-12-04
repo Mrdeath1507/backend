@@ -98,23 +98,56 @@ async def check_update(data: dict):
         return {"error": str(e), "update_available": False}
 
 @app.get("/api/download-update/{version}")
-async def download_update(version: str):
+async def download_update(version: str, file: str = None):
     """
-    Endpoint para descargar actualización (archivo ZIP)
-    En producción, esto serviría un archivo ZIP con los cambios
-    Por ahora, retorna un JSON indicando que la actualización está lista
+    Endpoint para descargar archivos específicos de la actualización
+    
+    Parámetros:
+    - version: versión a descargar (ej: 1.0.2)
+    - file: archivo específico a descargar (ej: js/api.js)
+    
+    En producción, aquí se servirían los archivos actualizados desde un repositorio
+    o servidor de archivos.
+    
+    Para desarrollo, retorna los archivos locales del proyecto.
     """
     try:
         # Verificar que la versión es válida
         if not is_valid_version(version):
             return {"error": "Versión inválida"}
         
+        # Si piden un archivo específico
+        if file:
+            # Ruta base del proyecto frontend
+            frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "www", file)
+            
+            # Sanitizar path para evitar traversal attacks
+            frontend_path = os.path.abspath(frontend_path)
+            base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend", "www"))
+            
+            if not frontend_path.startswith(base_path):
+                return {"error": "Path inválido"}
+            
+            if os.path.isfile(frontend_path):
+                return FileResponse(frontend_path, media_type="text/plain")
+            else:
+                return {"error": f"Archivo no encontrado: {file}"}
+        
+        # Si no especifica archivo, retornar información de actualización
         return {
             "status": "ok",
             "version": version,
             "message": "Actualización disponible para descargar",
-            "size_mb": 0.5,  # Tamaño estimado de cambios
-            "checksum": "abc123def456"  # Para verificar integridad
+            "size_mb": 0.5,
+            "checksum": "abc123def456",
+            "files": [
+                "js/api.js",
+                "js/dashboard.js",
+                "js/auth.js",
+                "css/style.css",
+                "dashboard.html",
+                "index.html"
+            ]
         }
     except Exception as e:
         return {"error": str(e)}
