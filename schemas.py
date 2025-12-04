@@ -112,7 +112,7 @@ class Top3Response(BaseModel):
 # ------------------------------
 
 class FriendshipBase(BaseModel):
-    friend_email: str
+    friend_username: str
 
 class FriendshipCreate(FriendshipBase):
     pass
