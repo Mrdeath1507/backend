@@ -8,8 +8,9 @@ from datetime import datetime
 print(f"[main.py] Current working directory: {os.getcwd()}")
 print(f"[main.py] sys.path: {sys.path}")
 
-from .database import Base, engine
-from .routers import users, workouts, progress, friendships
+import database
+from database import Base, engine
+from routers import users, workouts, progress, friendships
 
 Base.metadata.create_all(bind=engine)
 
@@ -183,8 +184,8 @@ async def download_update(version: str, file: str = None):
 # -------------------------
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from . import crud, schemas, models
-from .database import SessionLocal
+import crud, schemas, models
+from database import SessionLocal
 
 
 def get_db():

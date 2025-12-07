@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 import traceback
 
-from .. import schemas, crud, auth, models
-from .. import database
+import schemas, crud, auth, models
+import database
 
 router = APIRouter(
     prefix="/workouts",

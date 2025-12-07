@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..database import get_db
-from .. import models, schemas, auth
+from database import get_db
+import models, schemas, auth
 
 router = APIRouter(
     prefix="/friends",

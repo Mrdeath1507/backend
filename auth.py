@@ -5,8 +5,8 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from . import models, schemas
-from . import database
+import models, schemas
+import database
 
 SECRET_KEY = "SUPER_SECRET_KEY_CAMBIAR_ESTA_CLAVE"
 ALGORITHM = "HS256"
@@ -41,7 +41,7 @@ def create_access_token(data: dict):
 
 
 def create_user(user: schemas.UserCreate, db: Session):
-    from .crud import create_user as crud_create_user
+    from crud import create_user as crud_create_user
     return crud_create_user(db, user)
 
 
