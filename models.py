@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from database import Base
+from .database import Base
 
 
 class User(Base):
@@ -59,3 +59,15 @@ class Friendship(Base):
     # Relaciones
     user = relationship("User", foreign_keys=[user_id], backref="friendships_initiated")
     friend = relationship("User", foreign_keys=[friend_id], backref="friendships_received")
+
+
+class Calorias(Base):
+    __tablename__ = "calorias"
+
+    id = Column(Integer, primary_key=True, index=True)
+    mantenimiento = Column(Integer)
+    volumen_min = Column(Integer)
+    volumen_max = Column(Integer)
+    definicion_min = Column(Integer)
+    definicion_max = Column(Integer)
+    fecha = Column(String)

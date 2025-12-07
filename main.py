@@ -8,8 +8,8 @@ from datetime import datetime
 print(f"[main.py] Current working directory: {os.getcwd()}")
 print(f"[main.py] sys.path: {sys.path}")
 
-from database import Base, engine
-from routers import users, workouts, progress, friendships
+from .database import Base, engine
+from .routers import users, workouts, progress, friendships
 
 Base.metadata.create_all(bind=engine)
 
@@ -174,6 +174,39 @@ async def download_update(version: str, file: str = None):
                 "index.html"
             ]
         }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# -------------------------
+# Endpoints para Calorías
+# -------------------------
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from . import crud, schemas, models
+from .database import SessionLocal
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.post('/calorias')
+def guardar_calorias(data: schemas.CaloriasCreate, db: Session = Depends(get_db)):
+    try:
+        return crud.crear_calorias(db, data)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get('/calorias')
+def historial_calorias(db: Session = Depends(get_db)):
+    try:
+        return crud.obtener_calorias(db)
     except Exception as e:
         return {"error": str(e)}
 

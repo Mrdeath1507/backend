@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-import models, schemas
-from auth import hash_password
+from . import models, schemas
+from .auth import hash_password
 
 
 # ----------------------
@@ -93,3 +93,18 @@ def get_top3(db: Session, exercise: str):
     ).filter(models.ProgressMetric.exercise == exercise).order_by(
         models.ProgressMetric.max_weight.desc()
     ).limit(3).all()
+
+
+# ----------------------
+#   CALORIAS
+# ----------------------
+
+def crear_calorias(db: Session, data: 'schemas.CaloriasCreate'):
+    registro = models.Calorias(**data.dict())
+    db.add(registro)
+    db.commit()
+    db.refresh(registro)
+    return registro
+
+def obtener_calorias(db: Session):
+    return db.query(models.Calorias).order_by(models.Calorias.id.desc()).all()

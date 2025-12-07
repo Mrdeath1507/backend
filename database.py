@@ -8,8 +8,8 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Si no hay DATABASE_URL en el entorno, usar un SQLite local de fallback (solo para desarrollo)
-if DATABASE_URL is None:
+# Si no hay DATABASE_URL en el entorno o está vacía, usar un SQLite local de fallback (solo para desarrollo)
+if not DATABASE_URL:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     sqlite_path = os.path.join(current_dir, "dev_database.db")
     DATABASE_URL = f"sqlite:///{sqlite_path}"

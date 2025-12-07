@@ -134,3 +134,25 @@ class FriendComparison(BaseModel):
     friend_max_weight: float
     difference: float
     i_am_stronger: bool
+
+
+# ------------------------------
+#   CALORIAS
+# ------------------------------
+
+class CaloriasBase(BaseModel):
+    mantenimiento: int
+    volumen_min: int
+    volumen_max: int
+    definicion_min: int
+    definicion_max: int
+    fecha: str
+
+class CaloriasCreate(CaloriasBase):
+    pass
+
+class CaloriasRead(CaloriasBase):
+    id: int
+
+    class Config:
+        orm_mode = True
